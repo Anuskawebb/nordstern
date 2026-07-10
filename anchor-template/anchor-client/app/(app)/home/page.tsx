@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   ArrowDownToLine, ArrowUpFromLine, ChevronRight, Receipt,
   TrendingUp, Wallet, CheckCircle2, ArrowRight, Lock, Sparkles,
+  Zap, Shield, DollarSign,
 } from 'lucide-react';
 import { useCustomer } from '@/components/customer-context';
 import { useBrand } from '@/components/brand-context';
@@ -61,18 +62,19 @@ export default function HomePage() {
 
   return (
     <div className="space-y-8 fade-up">
-      {/* Greeting */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      {/* Greeting with enhanced spacing and typography */}
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm text-muted">Welcome back</p>
-          <h1 className="mt-0.5 text-3xl font-bold tracking-tight text-ink">Hi, {firstName}</h1>
+          <p className="text-sm font-medium text-muted">Welcome back</p>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight text-ink">Hi, {firstName}</h1>
+          <p className="mt-1.5 text-sm text-muted">Manage your digital assets securely</p>
         </div>
         {verified && (
-          <div className="flex gap-2">
-            <Link href="/buy" className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand px-5 text-sm font-semibold text-[var(--color-brand-ink)] transition hover:opacity-90">
+          <div className="flex gap-3">
+            <Link href="/buy" className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-purple-700 px-6 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl hover:shadow-purple-500/30 hover:scale-105">
               <ArrowDownToLine className="h-4 w-4" /> Buy {brand.assetCode}
             </Link>
-            <Link href="/sell" className="inline-flex h-11 items-center gap-2 rounded-xl border border-line bg-canvas px-5 text-sm font-semibold text-ink transition hover:bg-surface">
+            <Link href="/sell" className="inline-flex h-12 items-center gap-2 rounded-2xl border border-purple-200 bg-white px-6 text-sm font-semibold text-ink transition hover:bg-purple-50 hover:border-purple-300">
               <ArrowUpFromLine className="h-4 w-4" /> Sell
             </Link>
           </div>
@@ -84,23 +86,46 @@ export default function HomePage() {
         <VerificationCard status={customer?.kycStatus ?? 'unverified'} onAction={() => router.push('/verify')} />
       )}
 
-      {/* Stat row */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <StatTile
-          label="Your holdings" icon={<Wallet className="h-4 w-4" />}
-          value={holdings === null ? <Skeleton className="h-7 w-24" /> : `${Number(holdings).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${brand.assetCode}`}
-          sub={rate && holdings ? `≈ ${inr(Number(holdings) * Number(rate))}` : `Balance in ${brand.assetCode}`}
-        />
-        <StatTile
-          label="This month" icon={<TrendingUp className="h-4 w-4" />}
-          value={txns === null ? <Skeleton className="h-7 w-24" /> : inr(monthVolume)}
-          sub={`${monthTx.length} completed ${monthTx.length === 1 ? 'transaction' : 'transactions'}`}
-        />
-        <StatTile
-          label={`Latest rate`} icon={<Sparkles className="h-4 w-4" />}
-          value={rate === null ? <Skeleton className="h-7 w-24" /> : `1 ${brand.assetCode} ≈ ${inr(rate)}`}
-          sub="Live conversion rate"
-        />
+      {/* Stat row with enhanced design */}
+      <div className="grid gap-6 sm:grid-cols-3">
+        <div className="rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6 transition hover:border-purple-300 hover:shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-purple-100 p-3">
+              <Wallet className="h-5 w-5 text-purple-600" />
+            </div>
+            <p className="text-sm font-medium text-muted">Your holdings</p>
+          </div>
+          <p className="mt-4 text-2xl font-bold text-ink">
+            {holdings === null ? <Skeleton className="h-8 w-32" /> : `${Number(holdings).toLocaleString(undefined, { maximumFractionDigits: 2 })} ${brand.assetCode}`}
+          </p>
+          <p className="mt-2 text-xs text-muted">{rate && holdings ? `≈ ${inr(Number(holdings) * Number(rate))}` : `Balance in ${brand.assetCode}`}</p>
+        </div>
+
+        <div className="rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6 transition hover:border-purple-300 hover:shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-purple-100 p-3">
+              <TrendingUp className="h-5 w-5 text-purple-600" />
+            </div>
+            <p className="text-sm font-medium text-muted">This month</p>
+          </div>
+          <p className="mt-4 text-2xl font-bold text-ink">
+            {txns === null ? <Skeleton className="h-8 w-32" /> : inr(monthVolume)}
+          </p>
+          <p className="mt-2 text-xs text-muted">{monthTx.length} completed {monthTx.length === 1 ? 'transaction' : 'transactions'}</p>
+        </div>
+
+        <div className="rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-6 transition hover:border-purple-300 hover:shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-purple-100 p-3">
+              <Sparkles className="h-5 w-5 text-purple-600" />
+            </div>
+            <p className="text-sm font-medium text-muted">Latest rate</p>
+          </div>
+          <p className="mt-4 text-2xl font-bold text-ink">
+            {rate === null ? <Skeleton className="h-8 w-32" /> : `1 ${brand.assetCode}`}
+          </p>
+          <p className="mt-2 text-xs text-muted">{rate ? `≈ ${inr(rate)}` : 'Fetching…'}</p>
+        </div>
       </div>
 
       {/* Main grid */}
@@ -191,15 +216,15 @@ export default function HomePage() {
 
 function ActionCard({ href, icon, title, desc, cta, locked }: { href: string; icon: React.ReactNode; title: string; desc: string; cta: string; locked?: boolean }) {
   return (
-    <Link href={href} className="group block rounded-2xl border border-line bg-canvas p-6 transition hover:border-brand hover:shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.04)]">
+    <Link href={href} className="group block rounded-3xl border border-purple-200 bg-gradient-to-br from-white to-purple-50 p-8 transition hover:border-purple-300 hover:shadow-xl hover:shadow-purple-100/50">
       <div className="flex items-center justify-between">
-        <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand/12 text-brand-deep">{icon}</div>
-        {locked && <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2 py-1 text-[11px] font-medium text-muted"><Lock className="h-3 w-3" /> Verify first</span>}
+        <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 text-purple-600">{icon}</div>
+        {locked && <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-semibold text-yellow-700"><Lock className="h-3 w-3" /> Verify first</span>}
       </div>
-      <p className="mt-4 text-lg font-semibold text-ink">{title}</p>
-      <p className="mt-1 text-sm leading-relaxed text-muted">{desc}</p>
-      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-deep">
-        {locked ? 'Verify to unlock' : cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+      <p className="mt-6 text-xl font-bold text-ink">{title}</p>
+      <p className="mt-2 text-sm leading-relaxed text-muted">{desc}</p>
+      <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-purple-600 transition group-hover:translate-x-1">
+        {locked ? 'Verify to unlock' : cta} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
       </span>
     </Link>
   );
@@ -207,12 +232,12 @@ function ActionCard({ href, icon, title, desc, cta, locked }: { href: string; ic
 
 function Insight({ done, label, href }: { done: boolean; label: string; href: string }) {
   return (
-    <Link href={href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition hover:bg-surface/60">
+    <Link href={href} className="flex items-center gap-3.5 rounded-2xl px-4 py-3 transition hover:bg-purple-50">
       {done
-        ? <CheckCircle2 className="h-5 w-5 shrink-0 text-[var(--color-success)]" />
-        : <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 border-line" />}
+        ? <CheckCircle2 className="h-5 w-5 shrink-0 text-green-500" />
+        : <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 border-purple-300 bg-gradient-to-br from-purple-50 to-white" />}
       <span className={`flex-1 text-sm ${done ? 'text-muted line-through' : 'font-medium text-ink'}`}>{label}</span>
-      {!done && <ChevronRight className="h-4 w-4 text-faint" />}
+      {!done && <ChevronRight className="h-4 w-4 text-purple-400" />}
     </Link>
   );
 }
